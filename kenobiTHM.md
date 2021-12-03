@@ -81,7 +81,6 @@ Once you're connected, list the files on the share. What is the file can you see
 ```bash
 smbclient //10.10.228.42/anonymous -N    
 
-1 ⨯
 Try "help" to get a list of possible commands.
 smb: \> ls
 NT_STATUS_IO_TIMEOUT listing \*
@@ -157,4 +156,13 @@ PORT    STATE SERVICE
 
 Nmap done: 1 IP address (1 host up) scanned in 1.13 seconds                                              
 ```
+Lets get the version of ProFtpd. Use netcat to connect to the machine on the FTP port.
+
+```bash
+nc 10.10.228.42 21                                                                                                                                                                                                 
+
+220 ProFTPD 1.3.5 Server (ProFTPD Default Installation) [10.10.228.42]
+421 Login timeout (300 seconds): closing control connection
+```
+
 
