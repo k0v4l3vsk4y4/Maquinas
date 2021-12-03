@@ -75,10 +75,86 @@ Host script results:
 |_    Current user access: <none>
 
 Nmap done: 1 IP address (1 host up) scanned in 9.99 seconds
+```
+Using your machine, connect to the machines network share.
+Once you're connected, list the files on the share. What is the file can you see?
+```bash
+smbclient //10.10.228.42/anonymous -N    
 
+1 ⨯
+Try "help" to get a list of possible commands.
+smb: \> ls
+NT_STATUS_IO_TIMEOUT listing \*
+smb: \> SMBecho failed (NT_STATUS_INVALID_NETWORK_RESPONSE). The connection is disconnected now
+NT_STATUS_CONNECTION_DISCONNECTED listing \*
+                                                                                                                                                                                                                           
+┌──(kali㉿kali)-[~]
+└─$ smbclient //10.10.228.42/anonymous   
+Enter WORKGROUP\kali's password: 
+Try "help" to get a list of possible commands.
+smb: \> ls
+  .                                   D        0  Wed Sep  4 06:49:09 2019
+  ..                                  D        0  Wed Sep  4 06:56:07 2019
+  log.txt                             N    12237  Wed Sep  4 06:49:09 2019
 
+                9204224 blocks of size 1024. 6877108 blocks available
+smb: \> 
+```
+Download the file log.txt
+```bash
+smbclient //10.10.228.42/anonymous -N
+Try "help" to get a list of possible commands.
+smb: \> ls
+  .                                   D        0  Wed Sep  4 06:49:09 2019
+  ..                                  D        0  Wed Sep  4 06:56:07 2019
+  log.txt                             N    12237  Wed Sep  4 06:49:09 2019
 
+                9204224 blocks of size 1024. 6877108 blocks available
+smb: \> cat log.txt
+cat: command not found
+smb: \> help
+?              allinfo        altname        archive        backup         
+blocksize      cancel         case_sensitive cd             chmod          
+chown          close          del            deltree        dir            
+du             echo           exit           get            getfacl        
+geteas         hardlink       help           history        iosize         
+lcd            link           lock           lowercase      ls             
+l              mask           md             mget           mkdir          
+more           mput           newer          notify         open           
+posix          posix_encrypt  posix_open     posix_mkdir    posix_rmdir    
+posix_unlink   posix_whoami   print          prompt         put            
+pwd            q              queue          quit           readlink       
+rd             recurse        reget          rename         reput          
+rm             rmdir          showacls       setea          setmode        
+scopy          stat           symlink        tar            tarmode        
+timeout        translate      unlock         volume         vuid           
+wdel           logon          listconnect    showconnect    tcon           
+tdis           tid            utimes         logoff         ..             
+!              
+smb: \> get log.txt
+getting file \log.txt of size 12237 as log.txt (58.0 KiloBytes/sec) (average 58.0 KiloBytes/sec)
+smb: \> exit
+                                                                                                                                                                                                                           
+┌──(kali㉿kali)-[~]
+└─$ cat log.txt 
+```
 
+Your earlier nmap port scan will have shown port 111 running the service rpcbind. This is just a server that converts remote procedure call (RPC) program number into universal addresses. When an RPC service is started, it tells rpcbind the address at which it is listening and the RPC program number its prepared to serve. 
 
+In our case, port 111 is access to a network file system. Lets use nmap to enumerate this.
+
+´´´bash
+nmap -p 111 --script=nfs-ls,nfs-statfs,nfs-showmount 10.10.228.42
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-12-03 10:46 EST
+Nmap scan report for 10.10.228.42
+Host is up (0.066s latency).
+
+PORT    STATE SERVICE
+111/tcp open  rpcbind
+| nfs-showmount: 
+|_  /var *
+
+Nmap done: 1 IP address (1 host up) scanned in 1.13 seconds
+                                                
 
 
