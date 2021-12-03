@@ -143,8 +143,9 @@ Your earlier nmap port scan will have shown port 111 running the service rpcbind
 
 In our case, port 111 is access to a network file system. Lets use nmap to enumerate this.
 
-´´´bash
+```bash
 nmap -p 111 --script=nfs-ls,nfs-statfs,nfs-showmount 10.10.228.42
+
 Starting Nmap 7.91 ( https://nmap.org ) at 2021-12-03 10:46 EST
 Nmap scan report for 10.10.228.42
 Host is up (0.066s latency).
@@ -154,7 +155,6 @@ PORT    STATE SERVICE
 | nfs-showmount: 
 |_  /var *
 
-Nmap done: 1 IP address (1 host up) scanned in 1.13 seconds
-                                                
+Nmap done: 1 IP address (1 host up) scanned in 1.13 seconds                                              
 ```
 
